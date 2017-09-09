@@ -1,0 +1,46 @@
+
+
+h1,h2,h3,h4 {
+
+font-family: 'Open Sans', sans-serif;
+font-weight: bold;
+
+}
+
+
+
+button, #gasInput, p {
+	font-family: 'Open Sans', sans-serif;
+  	padding: 2% 2% 2% 2%;
+	font-size: 1.5em;
+}
+
+
+
+#main {
+margin: auto;
+ text-align:center;
+  width: 80%;
+
+}
+
+
+
+#timeSeries {
+	height: 400px;
+
+}
+
+#overview {
+display: none;
+
+}
+
+#highlight {
+
+  background-color: yellow;
+  font-weight: bold;
+  padding: 2px 2px 2px 2px;
+  
+
+}

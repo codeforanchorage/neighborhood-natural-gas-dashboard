@@ -1,25 +1,134 @@
+<link rel ="stylesheet" href= "style.css" type="text/css">
+
+
 <script src="fetch.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
     async function meter() {
-        var meter_id = document.getElementById('gasInput').value
-        var dis = document.getElementById('display')
+        var sensor_id = document.getElementById('gasInput').value
+        //var dis = document.getElementById('display')
 
         try {
-            let data = await getDataForSensor(meter_id)
-            dis.innerHTML = JSON.stringify(data, null, '\t')
+            let data = await getDataForSensorId(sensor_id)
+            //dis.innerHTML = JSON.stringify(data, null, '\t')
+
+            //plotting
+
+            var first48 = getSelectReadings(data, 500);
+            //console.log(JSON.stringify(first48));
+            plotTime(first48);
+
+            //this toggles the visibility of the text overview when fucntion fires
+            var overview = document.getElementById('overview');
+            overview.style.display = "inline";
+
+            //calculates data to compare 
+
+           var hood = await getDataForNeighborhood(sensor_id);
+           console.log("hood next:");
+           console.dir(hood);
+
+
+
         }
         catch (err) {
             console.log(err)
         }
     }
+
+function getSelectReadings (data, numReadings){
+//
+    let selectTime = [];
+   let selectReadings = [];
+   let selectObj = {};
+   
+   //grab most recent numReadings readings (* 2 for hours)
+   const selectData =  data.readings.slice(0,numReadings);
+    selectData.forEach (function(val) {
+        selectTime.push(val[0]);
+        selectReadings.push(val[1]);
+      
+    })
+
+    //create object
+  selectObj.time = selectTime;
+   selectObj.reading =  selectReadings;
+    //console.log("the object"+JSON.stringify(selectObj));
+    return selectObj;
+ 
+}
+
+//take neighborhood data convert for the plotting. 
+function wholeNeighborhood (hood){
+//
+    let neighborTime = [];
+   let neighborReading = [];
+   let neighborObj = {};
+   
+   //grab most recent numReadings readings (* 2 for hours)
+
+    selectData.forEach(function(val) {
+        neighborTime.push(val.readings[0]);
+        neighborReading.push(val.readings[1]);
+      
+    })
+
+    //create object
+  neighborObj.time = selectTime;
+   neighborhood.reading =  selectReadings;
+    //console.log("the object"+JSON.stringify(selectObj));
+    return neighborObj;
+ 
+}
+
+
+// plotting function in which an object is passed of time series and readings
+
+
+function plotTime (timeSeries) {
+    
+var timesTrace = {
+  x: timeSeries.time,
+  y: timeSeries.reading,
+  mode: 'lines'
+};
+
+var timeTraceData = [timesTrace];
+
+var timeLayout = {
+  title:'Your gas usage over past day',
+  font: {
+    family: 'Open-Sans',
+    color: '#000000',
+    size: 18
+  }
+};
+
+Plotly.newPlot('timeSeries', timeTraceData, timeLayout);
+
+
+}
+
+
+
+
+
+
 </script>
 
+<div id="main">
 <h1>
     Enter your gas meter ID:
 </h1>
 
 
-<input id="gasInput" type="text" value="60646804">
+<input id="gasInput" type="text" value="20383530">
 <button onclick="meter()">Go</button>
 
 <pre id="display"></pre>
+
+<p id="overview">Your gas usage is <span id="highlight">"usageReleative"</span> average for your neighborhood. <br />You can close your shades, lower your thermostat, or let in bright sun. </p>
+
+<div id= "timeSeries"></div>
+
+</div>
