@@ -1,20 +1,26 @@
 
-var sensorUrl = "https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/sensors";
-var dustinUrl = "https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/readings/dustinhouse_44599003"
+var ALL_SENSORS_URL = 'https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/sensors/'
+var SENSOR_DATA_URL = 'https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/readings/'
 
 
-fetch(dustinUrl).then((resp) => resp.json()).then(function(result) {
-  console.dir(result);
-  console.log(JSON.stringify("dustins readings"+result.data.readings[14]));
-    })
-  .catch(function(error) {
-    // If there is any error you will catch them here
-  });   
+async function getAllSensors() {
+  let response = await fetch(ALL_SENSORS_URL)
+  let json = await response.json()
+  return json.data.sensors
+}
 
+async function getSensorNameForId(sensor_id) {
+  let sensors = await getAllSensors()
+  window.sensors = sensors
+  let sensor = sensors.find(sensor => {
+    return sensor.sensor_id.endsWith('_' + sensor_id)
+  })
+  return sensor.sensor_id
+}
 
-fetch(sensorUrl).then((resp) => resp.json()).then(function(result) {
-  console.dir(result);
-    })
-  .catch(function(error) {
-    // If there is any error you will catch them here
-  });   
+async function getDataForSensor(sensor_id) {
+  let sensor_name = await getSensorNameForId(sensor_id)
+  let response = await fetch(SENSOR_DATA_URL + sensor_name)
+  let json = await response.json()
+  return json.data
+}

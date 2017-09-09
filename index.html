@@ -1,0 +1,25 @@
+<script src="fetch.js"></script>
+<script>
+    async function meter() {
+        var meter_id = document.getElementById('gasInput').value
+        var dis = document.getElementById('display')
+
+        try {
+            let data = await getDataForSensor(meter_id)
+            dis.innerHTML = JSON.stringify(data, null, '\t')
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+</script>
+
+<h1>
+    Enter your gas meter ID:
+</h1>
+
+
+<input id="gasInput" type="text" value="60646804">
+<button onclick="meter()">Go</button>
+
+<pre id="display"></pre>
