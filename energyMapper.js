@@ -1,12 +1,13 @@
-let mainGoogleMap;
+var mainGoogleMap;
 
 function myMap() {
 
-    let centerLatLong = new google.maps.LatLng(61.1181, -149.756667); // Defualt center hardcoded to Mitchell House
+    // let centerLatLong = new google.maps.LatLng(61.1181, -149.756667); // Defualt center hardcoded to Mitchell House
+    let centerLatLong = new google.maps.LatLng(61.166492, -149.872976)
 
     let mapProp= {
-        center:centerLatLong,    
-        zoom:12,
+        center:centerLatLong,
+        zoom:11,
     };
 
     let map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
@@ -45,6 +46,9 @@ async function PlotSensorData() {
     try {
         let data = await getAllSensors()
 
+        // filter just gas meters
+        // data = data.filter(sensor => /_\d\d\d\d\d\d\d\d$/.test(sensor.sensor_id))
+
         let map = this.mainGoogleMap;
 
         for (let dataCount = 0; dataCount < data.length; dataCount++) {
@@ -65,7 +69,7 @@ async function PlotSensorData() {
                     if (allMapPoints[i].buildingId == buildingId) {
                         newMapPointObj = allMapPoints[i];
                     }
-                }                    
+                }
 
                 if (newMapPointObj == null) {
                     let buildingPos = new google.maps.LatLng(building.latitude, building.longitude);
@@ -74,16 +78,16 @@ async function PlotSensorData() {
 
                     let sensorRadiusCircle = new google.maps.Circle({
                         center:buildingPos,
-                        radius:2000,
+                        radius:500,
                         strokeColor:"#0000FF",
-                        strokeOpacity:0.8,
+                        strokeOpacity:0.5,
                         strokeWeight:2,
                         fillColor:"#0000FF",
-                        fillOpacity:0.4,
+                        fillOpacity:0.2,
                         map:map
                     });
                     sensorRadiusCircle.setMap(map);
-                
+
                     let marker = new google.maps.Marker(
                         {
                             position: buildingPos
@@ -105,6 +109,8 @@ async function PlotSensorData() {
                         });
 
                         infowindow.open(map,marker);
+
+                        ZoomMapInOnBuildingId(building.bldg_id);
                     });
                 }
 
@@ -113,11 +119,36 @@ async function PlotSensorData() {
                 }
 
                 newMapPointObj.sensors.push(sensorData);
-                
+
             }
         }
     }
     catch (err) {
         console.log(err)
+    }    
+}
+
+function ZoomMapInOnBuildingId(buildingId) {
+    let buildingMapPoint = null;
+
+    for (let i = 0; i < allMapPoints.length; i++) {
+        if (allMapPoints[i].buildingId == buildingId) {
+            // newMapPointObj = allMapPoints[i];
+            buildingMapPoint = allMapPoints[i];
+        }
+    }                    
+
+    if (buildingMapPoint != null) {
+        let map = this.mainGoogleMap;
+
+        let marker = buildingMapPoint.marker;
+
+        var pos = new google.maps.LatLng(buildingMapPoint.buildingData.latitude, buildingMapPoint.buildingData.longitude);
+        map.setZoom(13);
+        map.setCenter(pos);
+        // window.setTimeout(function() {map.setZoom(pos);},3000);
+    }
+    else {
+        console.log("Didn't find a building with id: " + buildingId);
     }
 }

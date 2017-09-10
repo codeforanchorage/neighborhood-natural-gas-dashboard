@@ -1,6 +1,6 @@
 <link rel ="stylesheet" href= "style.css" type="text/css">
 
-
+<script src="all_sensors_cache.js"></script>
 <script src="fetch.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
@@ -12,32 +12,45 @@
             let data = await getDataForSensorId(sensor_id)
             //dis.innerHTML = JSON.stringify(data, null, '\t')
 
-            //plotting
 
-            var first48 = getSelectReadings(data, 50);
+            var first48 = getSelectReadings(data, 300);
             //console.log(JSON.stringify(first48));
-            
+                        console.log("the 48 data**");
+                        console.dir(first48);
 
             //this toggles the visibility of the text overview when fucntion fires
             var overview = document.getElementById('overview');
             overview.style.display = "inline";
 
-            //calculates data to compare 
+            //calculates data to compare
 
            var dustHood = await getDataForNeighborhood(sensor_id);
           console.log("#&#&#&#&hood next:");
            console.dir(dustHood);
 
         entireHood = wholeNeighborhood(dustHood);
-        //console.log("the HWHIE HOOD NEXST");
-       // console.dir(entireHood);
-
+     
  console.log("the 2ns from hood");
          console.log(entireHood[3].time);
   console.log(entireHood[3].reading);
 
         plotTime(first48);
             neighborhoodPlot(entireHood);
+
+            var hoodAverage = compareNeighbors(entireHood);
+            var userinputAverage =userAverage(first48);
+console.log("this is the user invputaverage" +userinputAverage);
+console.log("hoodave "+hoodAverage);
+            var usageRelative = ((userinputAverage/(userinputAverage-hoodAverage))*100).toFixed(1);
+
+            function determineSign (val) {
+                sign = val > 0 ? "above": "below";
+                return sign;
+            }
+            var usageRelativeSign = determineSign(usageRelative);
+
+            var averageInsert = document.getElementById('highlight');
+            averageInsert.innerHTML= usageRelative+" percent "+usageRelativeSign;
 
         }
         catch (err) {
@@ -50,13 +63,13 @@ function getSelectReadings (data, numReadings){
     let selectTime = [];
    let selectReadings = [];
    let selectObj = {};
-   
+
    //grab most recent numReadings readings (* 2 for hours)
    const selectData =  data.readings.slice(0,numReadings);
     selectData.forEach (function(val) {
         selectTime.push(val[0]);
         selectReadings.push(val[1]);
-      
+
     })
 
     //create object
@@ -64,14 +77,67 @@ function getSelectReadings (data, numReadings){
    selectObj.reading =  selectReadings;
     //console.log("the object"+JSON.stringify(selectObj));
     return selectObj;
- 
-}
-
-function compareNeighbors(sensor_id) {
-
 
 }
 
+
+function compareNeighbors(arr) {
+    
+    var averageArr = [];
+    var dailyAverage;
+
+//loop through the neighborhood array, removing those w/ fewer than 50 readings
+
+for (i=0; i<arr.length; i++){
+
+    if (arr[i].reading.length >50) {
+
+//console.log ("this should be a readings array "+arr[i].reading)
+   //push the readings to avarge into a new array
+    var averageArr = averageArr.concat(arr[i].reading);
+    }
+}
+console.log ("the average big arr"+averageArr);
+console.dir(averageArr);
+
+//average the new array
+var dailySum = averageArr.reduce(function(a,b) {return a+b;});
+var dailyAverage = dailySum/averageArr.length;
+
+//console.log("the dailiy ageravge"+dailyAverage);
+return dailyAverage;
+
+}
+
+function userAverage(arr) {
+
+var useraverageArr = [];
+    var userdailyAverage;
+
+    if (arr.reading.length >50) {
+
+//console.log ("this should be a readings array "+arr[i].reading)
+   //push the readings to avarge into a new array
+    var useraverageArr = useraverageArr.concat(arr.reading);
+    }
+
+console.log ("the average big arr"+useraverageArr);
+console.dir(useraverageArr);
+console.log("the length of the input reading"+ arr.reading.length);
+console.log ("the length fo the arret is "+useraverageArr.length);
+var arrTest = (arr.reading === useraverageArr);
+console.log("the arr test"+arrTest);
+
+//average the new array
+var userdailySum = useraverageArr.reduce(function(a,b) {return a+b;});
+var userdailyAverage = userdailySum/useraverageArr.length;
+
+//console.log("the dailiy ageravge"+dailyAverage);
+return userdailyAverage;
+
+
+
+}
 
 function calculateCost (sensor_id) {
 
@@ -79,11 +145,14 @@ function calculateCost (sensor_id) {
 }
 
 //take neighborhood data convert for the plotting. 
+
+
 function wholeNeighborhood (hood){
 //
     let neighborTime = [];
    let neighborReading = [];
    let neighborObj = {};
+
    let aggregatedneighborArray= [];
    
    //grab most recent numReadings readings (* 2 for hours)
@@ -105,13 +174,11 @@ function wholeNeighborhood (hood){
     aggregatedneighborArray.push(neighborObj);
          neighborObj = {}; 
         }
-        
-    })
 
-
+        })
     //console.log("the object"+JSON.stringify(selectObj));
     return aggregatedneighborArray;
- 
+
 }
 
 
@@ -119,7 +186,7 @@ function wholeNeighborhood (hood){
 
 
 function plotTime (timeSeries) {
-    
+
 var timesTrace = {
   x: timeSeries.time, 
   y: timeSeries.reading,
@@ -212,12 +279,20 @@ Plotly.newPlot('neighborhoodTime', hoodData, hoodLayout);
 
 
 
-
 </script>
+<div id="googleMap" style="width:100%;height:500px;"></div>
+
+<script src="energyMapper.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
 
 <div id="main">
+  <img src="flame.png"> 
+
+<h1 id='gas'>
+Keep it cool</h1>
 <h1>
-  <img src="flame.png">  Enter your gas meter ID number to see how you match up with your neighbors:
+ Enter your gas meter ID number to see how you match up with your neighbors:
 </h1>
 
 
@@ -226,11 +301,11 @@ Plotly.newPlot('neighborhoodTime', hoodData, hoodLayout);
 
 <pre id="display"></pre>
 
-<p id="overview">Your gas usage is <span id="highlight">"usageReleative"</span> average for your neighborhood. <br />You can close your shades, lower your thermostat, or let in bright sun. <br />
+<div id="overview"><p>Your gas usage is <span id="highlight"> </span> average for your neighborhood. <br />You can close your shades, lower your thermostat, or let in bright sun. <br />
 <br />
 
 
-Today, you're using enough gas to cost you ___ on a monthly basis. </p>
+Today, you're using enough gas to cost you ___ on a monthly basis.</p> </div>
 
 <div id= "timeSeries"></div>
 <div id= "neighborhoodTime"></div>
