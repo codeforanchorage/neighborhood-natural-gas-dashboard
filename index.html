@@ -9,14 +9,14 @@
         //var dis = document.getElementById('display')
 
         try {
-            let data = await getDataForSensorId(sensor_id)
-            //dis.innerHTML = JSON.stringify(data, null, '\t')
+            let done1 = fetchDataAndPlotDaily(sensor_id)
+            let done2 = fetchDataAndPlotWeekly(sensor_id)
 
-
-            var first48 = getSelectReadings(data, 300);
-            //console.log(JSON.stringify(first48));
-           // console.log("the 48 data**");
-            //console.dir(first48);
+            // wait until these are done so we can show your individual data
+            // while we wait for the whole neighborhood to load
+            let dailyData = await done1
+            await done2
+            let first48 = getSelectReadings(dailyData, 300)
 
             //this toggles the visibility of the text overview when fucntion fires
             var overview = document.getElementById('overview');
@@ -34,7 +34,6 @@
             console.log(entireHood[3].time);
             console.log(entireHood[3].reading);
 
-            plotTime(first48);
             neighborhoodPlot(entireHood);
 
             var hoodAverage = compareNeighbors(entireHood);
@@ -130,7 +129,7 @@
         //console.dir(useraverageArr);
         //console.log("the length of the input reading" + arr.reading.length);
         //console.log("the length fo the arret is " + useraverageArr.length);
-        var arrTest = (arr.reading === useraverageArr);
+        // var arrTest = (arr.reading === useraverageArr);
        // console.log("the arr test" + arrTest);
 
         //average the new array
@@ -188,7 +187,6 @@
 
 
     function returnLastReading (obj) {
-
         var userLength = obj.reading.length;
         var lastReading = (obj.reading[userLength -1]).toFixed(2);
         console.log("the last reading"+ lastReading);
@@ -232,7 +230,7 @@
             }
         };
 
-        Plotly.newPlot('timeSeries', timeTraceData, timeLayout);
+        Plotly.newPlot('dailyUsage', timeTraceData, timeLayout);
 
 
     }
@@ -242,52 +240,15 @@
 
     function neighborhoodPlot(hoodSet) {
 
+        hoodData = []
 
-        //for (i=0;i<hoodSet.length;i++) {
-        //ar hoodTrace = hoodSet[i][0];
-
-
-
-        var hoodTrace1 = {
-            x: hoodSet[0].time,
-            y: hoodSet[0].reading,
-            mode: 'lines'
-        };
-
-        var hoodTrace2 = {
-            x: hoodSet[1].time,
-            y: hoodSet[1].reading,
-            mode: 'lines'
-        };
-
-        var hoodTrace3 = {
-            x: hoodSet[2].time,
-            y: hoodSet[2].reading,
-            mode: 'lines'
-        };
-
-        var hoodTrace4 = {
-            x: hoodSet[3].time,
-            y: hoodSet[3].reading,
-            mode: 'lines'
-        };
-
-        var hoodTrace5 = {
-            x: hoodSet[4].time,
-            y: hoodSet[4].reading,
-            mode: 'lines'
-        };
-
-        var hoodTrace6 = {
-            x: hoodSet[5].time,
-            y: hoodSet[5].reading,
-            mode: 'lines'
-        };
-
-
-
-
-        var hoodData = [hoodTrace1, hoodTrace2, hoodTrace3, hoodTrace4, hoodTrace5, hoodTrace6];
+        hoodSet.forEach(neighbor => {
+            hoodData.push({
+                x: neighbor.time,
+                y: neighbor.reading,
+                mode: 'lines',
+            })
+        })
 
         var hoodLayout = {
             title: 'Gas Usage Among Your Neighbors',
@@ -301,6 +262,58 @@
         Plotly.newPlot('neighborhoodTime', hoodData, hoodLayout);
 
 
+    }
+
+    async function fetchDataAndPlotWeekly(sensor_id) {
+        let weeklyData = await getDataForSensorId(sensor_id)
+        let timeSeries = getSelectReadings(weeklyData, 999);
+
+        var timesTrace = {
+            x: timeSeries.time,
+            y: timeSeries.reading,
+            mode: 'lines'
+        };
+
+        var timeTraceData = [timesTrace];
+
+        var timeLayout = {
+            title: 'Your gas usage over past week',
+            font: {
+                family: 'Open Sans',
+                color: '#000000',
+                size: 18
+            }
+        };
+
+        Plotly.newPlot('weeklyUsage', timeTraceData, timeLayout);
+
+        return weeklyData
+    }
+
+    async function fetchDataAndPlotDaily(sensor_id) {
+        let dailyData = await getDailyDataForSensorId(sensor_id)
+        let timeSeries = getSelectReadings(dailyData, 999);
+
+        var timesTrace = {
+            x: timeSeries.time,
+            y: timeSeries.reading,
+            mode: 'lines'
+        };
+
+        var timeTraceData = [timesTrace];
+
+        var timeLayout = {
+            title: 'Your gas usage over past day',
+            font: {
+                family: 'Open Sans',
+                color: '#000000',
+                size: 18
+            }
+        };
+
+        Plotly.newPlot('dailyUsage', timeTraceData, timeLayout);
+
+        return dailyData
     }
 
 </script>
@@ -326,7 +339,7 @@
     <pre id="display"></pre>
 
     <div id="overview">
-        Here's three things you can do to cut your gas usage: 
+        Here's three things you can do to cut your gas usage:
         Close your shades at night<br />lower your thermostat <br /> let in bright sun during the day. <br />
           </p>
 
@@ -339,7 +352,8 @@
 
     </div>
 
-    <div id="timeSeries"></div>
+    <div id="dailyUsage"></div>
+    <div id="weeklyUsage"></div>
     <div id="neighborhoodTime"></div>
 
 </div>

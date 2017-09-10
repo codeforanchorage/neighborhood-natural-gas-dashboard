@@ -59,7 +59,8 @@ async function getDataForSensorName(sensor_name) {
 }
 
 // takes the full name (like "joehouse_2345")
-async function getDailyDataForSensorName(sensor_name) {
+async function getDailyDataForSensorId(sensor_id) {
+    let sensor_name = await getSensorNameForId(sensor_id)
     let response = await fetch(buildSensorUrl(sensor_name, ''))
     let json = await response.json()
     return json.data
@@ -71,7 +72,6 @@ async function getDataForNeighborhood(sensor_id) {
     let all_sensors = await getAllSensors()
     let sensor_name = all_sensors
         .find(sensor => {
-            console.log(sensor)
             return sensor.sensor_id && sensor.sensor_id.endsWith('_' + sensor_id)
         })
         .sensor_id
