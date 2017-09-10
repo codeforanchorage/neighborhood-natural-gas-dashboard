@@ -1,4 +1,4 @@
-let mainGoogleMap;
+var mainGoogleMap;
 
 function myMap() {
 
@@ -74,12 +74,12 @@ async function PlotSensorData() {
 
                     let sensorRadiusCircle = new google.maps.Circle({
                         center:buildingPos,
-                        radius:2000,
+                        radius:500,
                         strokeColor:"#0000FF",
-                        strokeOpacity:0.8,
+                        strokeOpacity:0.5,
                         strokeWeight:2,
                         fillColor:"#0000FF",
-                        fillOpacity:0.4,
+                        fillOpacity:0.2,
                         map:map
                     });
                     sensorRadiusCircle.setMap(map);
@@ -105,6 +105,8 @@ async function PlotSensorData() {
                         });
 
                         infowindow.open(map,marker);
+
+                        ZoomMapInOnBuildingId(building.bldg_id);
                     });
                 }
 
@@ -119,5 +121,30 @@ async function PlotSensorData() {
     }
     catch (err) {
         console.log(err)
+    }    
+}
+
+function ZoomMapInOnBuildingId(buildingId) {
+    let buildingMapPoint = null;
+
+    for (let i = 0; i < allMapPoints.length; i++) {
+        if (allMapPoints[i].buildingId == buildingId) {
+            // newMapPointObj = allMapPoints[i];
+            buildingMapPoint = allMapPoints[i];
+        }
+    }                    
+
+    if (buildingMapPoint != null) {
+        let map = this.mainGoogleMap;
+
+        let marker = buildingMapPoint.marker;
+
+        var pos = new google.maps.LatLng(buildingMapPoint.buildingData.latitude, buildingMapPoint.buildingData.longitude);
+        map.setZoom(13);
+        map.setCenter(pos);
+        // window.setTimeout(function() {map.setZoom(pos);},3000);
+    }
+    else {
+        console.log("Didn't find a building with id: " + buildingId);
     }
 }
