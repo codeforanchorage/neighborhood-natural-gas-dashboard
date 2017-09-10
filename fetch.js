@@ -1,5 +1,10 @@
 /**
  * gas per ccf is about $0.96
+ *
+ *
+ * nice to have:
+ * map zooming when a house if found
+ * loading progress indicator for neighborhood data
  */
 var ALL_SENSORS_URL = 'https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/sensors/'
 var SENSOR_DATA_URL = 'https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/readings/'
@@ -11,7 +16,7 @@ function buildSensorUrl(sensor_name) {
   sd.setDate(sd.getDate() - 7)
   let start_date_string = sd.toISOString().split('T')[0]
 
-  return `${SENSOR_DATA_URL}${sensor_name}?averaging=1H&start_ts=${start_date_string}`
+  return `${SENSOR_DATA_URL}${sensor_name}?averaging=1D&start_ts=${start_date_string}`
 }
 
 

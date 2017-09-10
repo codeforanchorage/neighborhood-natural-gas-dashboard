@@ -1,4 +1,4 @@
-<link rel ="stylesheet" href= "style.css" type="text/css">
+<link rel="stylesheet" href="style.css" type="text/css">
 
 <script src="all_sensors_cache.js"></script>
 <script src="fetch.js"></script>
@@ -15,8 +15,8 @@
 
             var first48 = getSelectReadings(data, 300);
             //console.log(JSON.stringify(first48));
-                        console.log("the 48 data**");
-                        console.dir(first48);
+            console.log("the 48 data**");
+            console.dir(first48);
 
             //this toggles the visibility of the text overview when fucntion fires
             var overview = document.getElementById('overview');
@@ -24,33 +24,33 @@
 
             //calculates data to compare
 
-           var dustHood = await getDataForNeighborhood(sensor_id);
-          console.log("#&#&#&#&hood next:");
-           console.dir(dustHood);
+            var dustHood = await getDataForNeighborhood(sensor_id);
+            console.log("#&#&#&#&hood next:");
+            console.dir(dustHood);
 
-        entireHood = wholeNeighborhood(dustHood);
-     
- console.log("the 2ns from hood");
-         console.log(entireHood[3].time);
-  console.log(entireHood[3].reading);
+            entireHood = wholeNeighborhood(dustHood);
 
-        plotTime(first48);
+            console.log("the 2ns from hood");
+            console.log(entireHood[3].time);
+            console.log(entireHood[3].reading);
+
+            plotTime(first48);
             neighborhoodPlot(entireHood);
 
             var hoodAverage = compareNeighbors(entireHood);
-            var userinputAverage =userAverage(first48);
-console.log("this is the user invputaverage" +userinputAverage);
-console.log("hoodave "+hoodAverage);
-            var usageRelative = ((userinputAverage/(userinputAverage-hoodAverage))*100).toFixed(1);
+            var userinputAverage = userAverage(first48);
+            console.log("this is the user invputaverage" + userinputAverage);
+            console.log("hoodave " + hoodAverage);
+            var usageRelative = ((userinputAverage / (userinputAverage - hoodAverage)) * 100).toFixed(1);
 
-            function determineSign (val) {
-                sign = val > 0 ? "above": "below";
+            function determineSign(val) {
+                sign = val > 0 ? "above" : "below";
                 return sign;
             }
             var usageRelativeSign = determineSign(usageRelative);
-//http://www.enstarnaturalgas.com/wp-content/uploads/2014/09/Attachment-E-Tariff-Sheets-262-4-.pdf
+            //http://www.enstarnaturalgas.com/wp-content/uploads/2014/09/Attachment-E-Tariff-Sheets-262-4-.pdf
             var averageInsert = document.getElementById('highlight');
-            averageInsert.innerHTML= usageRelative+" percent "+usageRelativeSign;
+            averageInsert.innerHTML = usageRelative + " percent " + usageRelativeSign;
 
         }
         catch (err) {
@@ -58,226 +58,222 @@ console.log("hoodave "+hoodAverage);
         }
     }
 
-function getSelectReadings (data, numReadings){
-//
-    let selectTime = [];
-   let selectReadings = [];
-   let selectObj = {};
+    function getSelectReadings(data, numReadings) {
+        //
+        let selectTime = [];
+        let selectReadings = [];
+        let selectObj = {};
 
-   //grab most recent numReadings readings (* 2 for hours)
-   const selectData =  data.readings.slice(0,numReadings);
-    selectData.forEach (function(val) {
-        selectTime.push(val[0]);
-        selectReadings.push(val[1]);
+        //grab most recent numReadings readings (* 2 for hours)
+        const selectData = data.readings.slice(0, numReadings);
+        selectData.forEach(function (val) {
+            selectTime.push(val[0]);
+            selectReadings.push(val[1]);
 
-    })
+        })
 
-    //create object
-  selectObj.time = selectTime;
-   selectObj.reading =  selectReadings;
-    //console.log("the object"+JSON.stringify(selectObj));
-    return selectObj;
+        //create object
+        selectObj.time = selectTime;
+        selectObj.reading = selectReadings;
+        //console.log("the object"+JSON.stringify(selectObj));
+        return selectObj;
 
-}
-
-
-function compareNeighbors(arr) {
-    
-    var averageArr = [];
-    var dailyAverage;
-
-//loop through the neighborhood array, removing those w/ fewer than 50 readings
-
-for (i=0; i<arr.length; i++){
-
-    if (arr[i].reading.length >50) {
-
-//console.log ("this should be a readings array "+arr[i].reading)
-   //push the readings to avarge into a new array
-    var averageArr = averageArr.concat(arr[i].reading);
-    }
-}
-console.log ("the average big arr"+averageArr);
-console.dir(averageArr);
-
-//average the new array
-var dailySum = averageArr.reduce(function(a,b) {return a+b;});
-var dailyAverage = dailySum/averageArr.length;
-
-//console.log("the dailiy ageravge"+dailyAverage);
-return dailyAverage;
-
-}
-
-function userAverage(arr) {
-
-var useraverageArr = [];
-    var userdailyAverage;
-
-    if (arr.reading.length >50) {
-
-//console.log ("this should be a readings array "+arr[i].reading)
-   //push the readings to avarge into a new array
-    var useraverageArr = useraverageArr.concat(arr.reading);
     }
 
-console.log ("the average big arr"+useraverageArr);
-console.dir(useraverageArr);
-console.log("the length of the input reading"+ arr.reading.length);
-console.log ("the length fo the arret is "+useraverageArr.length);
-var arrTest = (arr.reading === useraverageArr);
-console.log("the arr test"+arrTest);
 
-//average the new array
-var userdailySum = useraverageArr.reduce(function(a,b) {return a+b;});
-var userdailyAverage = userdailySum/useraverageArr.length;
+    function compareNeighbors(arr) {
 
-//console.log("the dailiy ageravge"+dailyAverage);
-return userdailyAverage;
+        var averageArr = [];
+        var dailyAverage;
+
+        //loop through the neighborhood array, removing those w/ fewer than 50 readings
+
+        for (i = 0; i < arr.length; i++) {
+
+            if (arr[i].reading.length > 6) {
+
+                //console.log ("this should be a readings array "+arr[i].reading)
+                //push the readings to avarge into a new array
+                var averageArr = averageArr.concat(arr[i].reading);
+            }
+        }
+        console.log("the average big arr" + averageArr);
+        console.dir(averageArr);
+
+        //average the new array
+        var dailySum = averageArr.reduce(function (a, b) { return a + b; });
+        var dailyAverage = dailySum / averageArr.length;
+
+        //console.log("the dailiy ageravge"+dailyAverage);
+        return dailyAverage;
+
+    }
+
+    function userAverage(arr) {
+
+        var useraverageArr = [];
+        var userdailyAverage;
+
+        // if (arr.reading.length >50) {
+
+        //console.log ("this should be a readings array "+arr[i].reading)
+        //push the readings to avarge into a new array
+        var useraverageArr = useraverageArr.concat(arr.reading);
+        // }
+
+        console.log("the average big arr" + useraverageArr);
+        console.dir(useraverageArr);
+        console.log("the length of the input reading" + arr.reading.length);
+        console.log("the length fo the arret is " + useraverageArr.length);
+        var arrTest = (arr.reading === useraverageArr);
+        console.log("the arr test" + arrTest);
+
+        //average the new array
+        var userdailySum = useraverageArr.reduce(function (a, b) { return a + b; });
+        var userdailyAverage = userdailySum / useraverageArr.length;
+
+        //console.log("the dailiy ageravge"+dailyAverage);
+        return userdailyAverage;
 
 
 
-}
+    }
 
-function calculateCost (sensor_id) {
+    function calculateCost(sensor_id) {
 
-    //$0.13361 per hundred cubic feet (Ccf) 
-}
+        //$0.13361 per hundred cubic feet (Ccf)
+    }
 
-//take neighborhood data convert for the plotting. 
+    //take neighborhood data convert for the plotting.
 
 
-function wholeNeighborhood (hood){
-//
-    let neighborTime = [];
-   let neighborReading = [];
-   let neighborObj = {};
+    function wholeNeighborhood(hood) {
+        //
+        let neighborTime = [];
+        let neighborReading = [];
+        let neighborObj = {};
 
-   let aggregatedneighborArray= [];
-   
-   //grab most recent numReadings readings (* 2 for hours)
+        let aggregatedneighborArray = [];
 
-    hood.forEach(
-            function(val) {
+        //grab most recent numReadings readings (* 2 for hours)
+
+        hood.forEach(
+            function (val) {
                 val.readings.forEach(
-                    function(num){
+                    function (num) {
                         neighborTime.push(num[0]);
                         neighborReading.push(num[1]);
 
-                })
-            neighborObj.time = neighborTime;
-            neighborObj.reading = neighborReading;
-            neighborReading = [];
-            neighborTime = [];
-        {
+                    })
+                neighborObj.time = neighborTime;
+                neighborObj.reading = neighborReading;
+                neighborReading = [];
+                neighborTime = [];
+                {
 
-    aggregatedneighborArray.push(neighborObj);
-         neighborObj = {}; 
-        }
+                    aggregatedneighborArray.push(neighborObj);
+                    neighborObj = {};
+                }
 
-        })
-    //console.log("the object"+JSON.stringify(selectObj));
-    return aggregatedneighborArray;
+            })
+        //console.log("the object"+JSON.stringify(selectObj));
+        return aggregatedneighborArray;
 
-}
-
-
-// plotting function in which an object is passed of time series and readings
+    }
 
 
-function plotTime (timeSeries) {
-
-var timesTrace = {
-  x: timeSeries.time, 
-  y: timeSeries.reading,
-  mode: 'lines'
-};
-
-var timeTraceData = [timesTrace];
-
-var timeLayout = {
-  title:'Your gas usage over past day',
-  font: {
-    family: 'Open Sans',
-    color: '#000000',
-    size: 18
-  }
-};
-
-Plotly.newPlot('timeSeries', timeTraceData, timeLayout);
+    // plotting function in which an object is passed of time series and readings
 
 
-}
+    function plotTime(timeSeries) {
+
+        var timesTrace = {
+            x: timeSeries.time,
+            y: timeSeries.reading,
+            mode: 'lines'
+        };
+
+        var timeTraceData = [timesTrace];
+
+        var timeLayout = {
+            title: 'Your gas usage over past day',
+            font: {
+                family: 'Open Sans',
+                color: '#000000',
+                size: 18
+            }
+        };
+
+        Plotly.newPlot('timeSeries', timeTraceData, timeLayout);
 
 
-///Neighborhood large plot
-
-function neighborhoodPlot(hoodSet) {
-    
-
-//for (i=0;i<hoodSet.length;i++) {
-//ar hoodTrace = hoodSet[i][0];
+    }
 
 
+    ///Neighborhood large plot
 
-var hoodTrace1 = {
-  x: hoodSet[0].time, 
-  y: hoodSet[0].reading,
-  mode: 'lines'
-};
+    function neighborhoodPlot(hoodSet) {
 
-var hoodTrace2 = {
-  x: hoodSet[1].time, 
-  y: hoodSet[1].reading,
-  mode: 'lines'
-};
 
-var hoodTrace3 = {
-  x: hoodSet[2].time, 
-  y: hoodSet[2].reading,
-  mode: 'lines'
-};
-
-var hoodTrace4 = {
-  x: hoodSet[3].time, 
-  y: hoodSet[3].reading,
-  mode: 'lines'
-};
-
-var hoodTrace5 = {
-  x: hoodSet[4].time, 
-  y: hoodSet[4].reading,
-  mode: 'lines'
-};
-
-var hoodTrace6 = {
-  x: hoodSet[5].time, 
-  y: hoodSet[5].reading,
-  mode: 'lines'
-};
+        //for (i=0;i<hoodSet.length;i++) {
+        //ar hoodTrace = hoodSet[i][0];
 
 
 
+        var hoodTrace1 = {
+            x: hoodSet[0].time,
+            y: hoodSet[0].reading,
+            mode: 'lines'
+        };
 
-var hoodData = [hoodTrace1, hoodTrace2, hoodTrace3, hoodTrace4, hoodTrace5, hoodTrace6];
+        var hoodTrace2 = {
+            x: hoodSet[1].time,
+            y: hoodSet[1].reading,
+            mode: 'lines'
+        };
 
-var hoodLayout = {
-  title:'Gas Usage Among Your Neighbors',
-  font: {
-    family: "Open-Sans",
-    color: '#000000',
-    size: 18
-  }
-};
+        var hoodTrace3 = {
+            x: hoodSet[2].time,
+            y: hoodSet[2].reading,
+            mode: 'lines'
+        };
 
-Plotly.newPlot('neighborhoodTime', hoodData, hoodLayout);
+        var hoodTrace4 = {
+            x: hoodSet[3].time,
+            y: hoodSet[3].reading,
+            mode: 'lines'
+        };
 
+        var hoodTrace5 = {
+            x: hoodSet[4].time,
+            y: hoodSet[4].reading,
+            mode: 'lines'
+        };
 
-}
+        var hoodTrace6 = {
+            x: hoodSet[5].time,
+            y: hoodSet[5].reading,
+            mode: 'lines'
+        };
 
 
 
 
+        var hoodData = [hoodTrace1, hoodTrace2, hoodTrace3, hoodTrace4, hoodTrace5, hoodTrace6];
+
+        var hoodLayout = {
+            title: 'Gas Usage Among Your Neighbors',
+            font: {
+                family: "Open-Sans",
+                color: '#000000',
+                size: 18
+            }
+        };
+
+        Plotly.newPlot('neighborhoodTime', hoodData, hoodLayout);
+
+
+    }
 
 </script>
 <div id="googleMap" style="width:100%;height:500px;"></div>
@@ -287,27 +283,27 @@ Plotly.newPlot('neighborhoodTime', hoodData, hoodLayout);
 <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
 
 <div id="main">
-  <img src="flame.png"> 
+    <img src="flame.png">
 
-<h1 id='gas'>
-Keep it cool</h1>
-<h1>
- Enter your gas meter ID number to see how you match up with your neighbors:
-</h1>
-
-
-<input id="gasInput" type="text" value="20383530">
-<button onclick="meter()">Go</button>
-
-<pre id="display"></pre>
-
-<div id="overview"><p>Your gas usage is <span id="highlight"> </span> average for your neighborhood. <br />You can close your shades, lower your thermostat, or let in bright sun. <br />
-<br />
+    <h1 id='gas'>
+        Keep it cool</h1>
+    <h1>
+        Enter your gas meter ID number to see how you match up with your neighbors:
+    </h1>
 
 
-Today, you're using enough gas to cost you ___ on a monthly basis.</p> </div>
+    <input id="gasInput" type="text" value="20383530">
+    <button onclick="meter()">Go</button>
 
-<div id= "timeSeries"></div>
-<div id= "neighborhoodTime"></div>
+    <pre id="display"></pre>
+
+    <div id="overview">
+        <p>Your gas usage is <span id="highlight"> </span> average for your neighborhood. <br />You can close your shades, lower
+            your thermostat, or let in bright sun. <br />
+            <br /> Today, you're using enough gas to cost you ___ on a monthly basis.</p>
+    </div>
+
+    <div id="timeSeries"></div>
+    <div id="neighborhoodTime"></div>
 
 </div>
