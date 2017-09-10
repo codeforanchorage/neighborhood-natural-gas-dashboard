@@ -1,4 +1,6 @@
-
+/**
+ * gas per ccf is about $0.96
+ */
 var ALL_SENSORS_URL = 'https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/sensors/'
 var SENSOR_DATA_URL = 'https://cors-anywhere.herokuapp.com/https://bmon.analysisnorth.com/api/v1/readings/'
 var AGE_LIMIT = 7 // record age in days
@@ -15,6 +17,10 @@ function buildSensorUrl(sensor_name) {
 
 // gets a list of all sensors
 async function getAllSensors() {
+  if (window.ALL_SENSORS_CACHE) {
+    return Promise.resolve(ALL_SENSORS_CACHE.data.sensors)
+  }
+
   let response = await fetch(ALL_SENSORS_URL)
   let json = await response.json()
   return json.data.sensors

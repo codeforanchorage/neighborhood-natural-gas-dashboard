@@ -22,7 +22,7 @@
             var overview = document.getElementById('overview');
             overview.style.display = "inline";
 
-            //calculates data to compare 
+            //calculates data to compare
 
            var hood = await getDataForNeighborhood(sensor_id);
            console.log("hood next:");
@@ -41,13 +41,13 @@ function getSelectReadings (data, numReadings){
     let selectTime = [];
    let selectReadings = [];
    let selectObj = {};
-   
+
    //grab most recent numReadings readings (* 2 for hours)
    const selectData =  data.readings.slice(0,numReadings);
     selectData.forEach (function(val) {
         selectTime.push(val[0]);
         selectReadings.push(val[1]);
-      
+
     })
 
     //create object
@@ -55,22 +55,22 @@ function getSelectReadings (data, numReadings){
    selectObj.reading =  selectReadings;
     //console.log("the object"+JSON.stringify(selectObj));
     return selectObj;
- 
+
 }
 
-//take neighborhood data convert for the plotting. 
+//take neighborhood data convert for the plotting.
 function wholeNeighborhood (hood){
 //
     let neighborTime = [];
    let neighborReading = [];
    let neighborObj = {};
-   
+
    //grab most recent numReadings readings (* 2 for hours)
 
     selectData.forEach(function(val) {
         neighborTime.push(val.readings[0]);
         neighborReading.push(val.readings[1]);
-      
+
     })
 
     //create object
@@ -78,7 +78,7 @@ function wholeNeighborhood (hood){
    neighborhood.reading =  selectReadings;
     //console.log("the object"+JSON.stringify(selectObj));
     return neighborObj;
- 
+
 }
 
 
@@ -86,7 +86,7 @@ function wholeNeighborhood (hood){
 
 
 function plotTime (timeSeries) {
-    
+
 var timesTrace = {
   x: timeSeries.time,
   y: timeSeries.reading,
@@ -115,6 +115,11 @@ Plotly.newPlot('timeSeries', timeTraceData, timeLayout);
 
 
 </script>
+<div id="googleMap" style="width:100%;height:630px;"></div>
+
+<script src="energyMapper.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
 
 <div id="main">
 <h1>
