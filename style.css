@@ -10,6 +10,39 @@ padding-bottom: -9%;
 }
 
 
+.container {
+  display: flex; /* or inline-flex */
+}
+
+
+#div1, #div2, #div3{
+margin: auto;
+font-size: 3rem;
+font-family: 'Open Sans', sans-serif;
+font-weight: bold;
+height: 10%;
+border-style: solid;
+border-width: 2px;
+border-radius: 10px
+
+}
+
+#div1{
+background-color: red;
+flex-grow: 1; 
+}
+
+
+#div2{
+background-color: green;
+flex-grow: 1; 
+}
+
+#div3{
+background-color: blue;
+flex-grow: 1; 
+}
+
 
 button, #gasInput, p {
 	font-family: 'Open Sans', sans-serif;

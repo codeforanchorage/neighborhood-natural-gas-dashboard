@@ -15,8 +15,8 @@
 
             var first48 = getSelectReadings(data, 300);
             //console.log(JSON.stringify(first48));
-            console.log("the 48 data**");
-            console.dir(first48);
+           // console.log("the 48 data**");
+            //console.dir(first48);
 
             //this toggles the visibility of the text overview when fucntion fires
             var overview = document.getElementById('overview');
@@ -25,8 +25,8 @@
             //calculates data to compare
 
             var dustHood = await getDataForNeighborhood(sensor_id);
-            console.log("#&#&#&#&hood next:");
-            console.dir(dustHood);
+            //console.log("#&#&#&#&hood next:");
+            //console.dir(dustHood);
 
             entireHood = wholeNeighborhood(dustHood);
 
@@ -51,6 +51,9 @@
             //http://www.enstarnaturalgas.com/wp-content/uploads/2014/09/Attachment-E-Tariff-Sheets-262-4-.pdf
             var averageInsert = document.getElementById('highlight');
             averageInsert.innerHTML = usageRelative + " percent " + usageRelativeSign;
+
+            var lastReadingValue = returnLastReading(first48);
+             var costValue =  calculateCost(lastReadingValue);
 
         }
         catch (err) {
@@ -97,8 +100,8 @@
                 var averageArr = averageArr.concat(arr[i].reading);
             }
         }
-        console.log("the average big arr" + averageArr);
-        console.dir(averageArr);
+        //console.log("the average big arr" + averageArr);
+        //console.dir(averageArr);
 
         //average the new array
         var dailySum = averageArr.reduce(function (a, b) { return a + b; });
@@ -121,12 +124,12 @@
         var useraverageArr = useraverageArr.concat(arr.reading);
         // }
 
-        console.log("the average big arr" + useraverageArr);
-        console.dir(useraverageArr);
-        console.log("the length of the input reading" + arr.reading.length);
-        console.log("the length fo the arret is " + useraverageArr.length);
+        //console.log("the average big arr" + useraverageArr);
+        //console.dir(useraverageArr);
+        //console.log("the length of the input reading" + arr.reading.length);
+        //console.log("the length fo the arret is " + useraverageArr.length);
         var arrTest = (arr.reading === useraverageArr);
-        console.log("the arr test" + arrTest);
+       // console.log("the arr test" + arrTest);
 
         //average the new array
         var userdailySum = useraverageArr.reduce(function (a, b) { return a + b; });
@@ -180,6 +183,29 @@
         return aggregatedneighborArray;
 
     }
+
+
+    function returnLastReading (obj) {
+
+        var userLength = obj.reading.length;
+        var lastReading = (obj.reading[userLength -1]).toFixed(2);
+        console.log("the last reading"+ lastReading);
+        return lastReading;
+    }
+
+
+    function calculateCost (val) {
+
+        // BTU first to CCF
+        //
+
+       var valDaily = (val*24)/103000;
+       var cost = (valDaily * .13).toFixed(2);
+        console.log("the cost"+ cost);
+       return cost;
+
+    }
+
 
 
     // plotting function in which an object is passed of time series and readings
@@ -301,6 +327,14 @@
         <p>Your gas usage is <span id="highlight"> </span> average for your neighborhood. <br />You can close your shades, lower
             your thermostat, or let in bright sun. <br />
             <br /> Today, you're using enough gas to cost you ___ on a monthly basis.</p>
+
+<div class="container">
+
+<div id="div1"></div>
+<div id="div2"></div>
+<div id="div3"></div>
+</div>
+
     </div>
 
     <div id="timeSeries"></div>
