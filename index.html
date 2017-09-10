@@ -34,7 +34,8 @@
             console.log(entireHood[3].time);
             console.log(entireHood[3].reading);
 
-            neighborhoodPlot(entireHood);
+            // neighborhoodPlot(entireHood);
+            leaderboardPlot(dustHood)
 
             var hoodAverage = compareNeighbors(entireHood);
             var userinputAverage = userAverage(first48);
@@ -316,6 +317,32 @@
         return dailyData
     }
 
+    function leaderboardPlot(hoodSet) {
+        hoodData = {
+            x: [],
+            y: [],
+            type: 'bar',
+        }
+
+        hoodSet.forEach((neighbor, index) => {
+            if (!neighbor.readings.length) return
+
+            let total = neighbor.readings.reduce((x,y) => x?x[1]:0 + y?y[1]:0)
+            hoodData.y.push(total)
+            hoodData.x.push('anon ' + index)
+        })
+
+        var hoodLayout = {
+            title: 'Gas Usage Among Your Neighbors',
+            font: {
+                family: "Open-Sans",
+                color: '#000000',
+                size: 18
+            }
+        };
+
+        Plotly.newPlot('neighborhoodTime', [hoodData], hoodLayout);
+    }
 </script>
 
     <div id="googleMap" style="width:100%;height:300px;"></div>
