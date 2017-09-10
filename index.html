@@ -49,11 +49,13 @@
             }
             var usageRelativeSign = determineSign(usageRelative);
             //http://www.enstarnaturalgas.com/wp-content/uploads/2014/09/Attachment-E-Tariff-Sheets-262-4-.pdf
-            var averageInsert = document.getElementById('highlight');
-            averageInsert.innerHTML = usageRelative + " percent " + usageRelativeSign;
+            var averageInsert = document.getElementById('ban3');
+            averageInsert.innerHTML = usageRelative + " % " + usageRelativeSign;
 
             var lastReadingValue = returnLastReading(first48);
              var costValue =  calculateCost(lastReadingValue);
+            document.getElementById('ban1').innerHTML = lastReadingValue.toLocaleString()+" BTUs";
+            document.getElementById('ban2').innerHTML =  "$"+costValue;
 
         }
         catch (err) {
@@ -324,15 +326,15 @@
     <pre id="display"></pre>
 
     <div id="overview">
-        <p>Your gas usage is <span id="highlight"> </span> average for your neighborhood. <br />You can close your shades, lower
-            your thermostat, or let in bright sun. <br />
-            <br /> Today, you're using enough gas to cost you ___ on a monthly basis.</p>
+        Here's three things you can do to cut your gas usage: 
+        Close your shades at night<br />lower your thermostat <br /> let in bright sun during the day. <br />
+          </p>
 
 <div class="container">
 
-<div id="div1"></div>
-<div id="div2"></div>
-<div id="div3"></div>
+<div id="div1"><p id="ban1"><p id="banexplain">Latest hourly reading</div>
+<div id="div2"><p id="ban2"><p  id="banexplain">Gas cost over 24-hour period</div>
+<div id="div3"><p id="ban3"><p id="banexplain">You're compared to your neighborhood</div>
 </div>
 
     </div>
