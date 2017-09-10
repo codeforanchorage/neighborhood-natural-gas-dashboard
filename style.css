@@ -4,6 +4,8 @@ h1,h2,h3,h4 {
 
 font-family: 'Open Sans', sans-serif;
 font-weight: bold;
+font-size: 1.8rem;
+padding-bottom: -9%;
 
 }
 
@@ -12,7 +14,32 @@ font-weight: bold;
 button, #gasInput, p {
 	font-family: 'Open Sans', sans-serif;
   	padding: 2% 2% 2% 2%;
-	font-size: 1.5em;
+	font-size: 1.9em;
+	
+	
+
+}
+
+#gas {
+font-size:5rem;
+
+
+}
+
+
+
+button {
+	background-color: white;
+	border-width: 2px;
+	border-style: solid;
+}
+
+
+button:hover{
+background-color: black;
+color:white;
+border-style: solid;
+
 }
 
 
@@ -26,7 +53,7 @@ margin: auto;
 
 
 
-#timeSeries {
+#timeSeries, #neighborhoodTime {
 	height: 400px;
 
 }
@@ -36,11 +63,24 @@ display: none;
 
 }
 
+#googlemap {
+
+	float:right;
+}
+
 #highlight {
 
   background-color: yellow;
   font-weight: bold;
   padding: 2px 2px 2px 2px;
+  opacity: .8;
   
+
+}
+
+
+
+img{
+height: 90px;
 
 }
