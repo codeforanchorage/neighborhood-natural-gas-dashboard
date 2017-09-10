@@ -61,7 +61,15 @@ async function getDataForSensorName(sensor_name) {
 // takes the full name (like "joehouse_2345")
 async function getDailyDataForSensorId(sensor_id) {
     let sensor_name = await getSensorNameForId(sensor_id)
-    let response = await fetch(buildSensorUrl(sensor_name, ''))
+
+
+    let sd = new Date()
+    sd.setDate(sd.getDate() - 2)
+    let start_date_string = sd.toISOString().split('T')[0]
+
+    let url = `${SENSOR_DATA_URL}${sensor_name}?&start_ts=${start_date_string}`
+
+    let response = await fetch(url)
     let json = await response.json()
     return json.data
 }
