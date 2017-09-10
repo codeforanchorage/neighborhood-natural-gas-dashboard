@@ -327,13 +327,13 @@
         hoodSet.forEach((neighbor, index) => {
             if (!neighbor.readings.length) return
 
-            let total = neighbor.readings.reduce((x,y) => x?x[1]:0 + y?y[1]:0)
+            let total = neighbor.readings.reduce((x,y) => x?x[1]:0 + y?(y[1]*24):0)
             hoodData.y.push(total)
             hoodData.x.push('anon ' + index)
         })
 
         var hoodLayout = {
-            title: 'Gas Usage Among Your Neighbors',
+            title: 'Weekly Gas Usage Among Your Neighbors',
             font: {
                 family: "Open-Sans",
                 color: '#000000',
@@ -368,8 +368,8 @@
     <pre id="display"></pre>
 
     <div id="overview">
-     
-       
+
+
 
 <div class="container">
 
