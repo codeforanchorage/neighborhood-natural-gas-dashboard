@@ -7,7 +7,7 @@ function myMap() {
 
     let mapProp= {
         center:centerLatLong,
-        zoom:11,
+        zoom:10,
     };
 
     let map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
@@ -46,8 +46,8 @@ async function PlotSensorData() {
     try {
         let data = await getAllSensors()
 
-        // filter just gas meters
-        // data = data.filter(sensor => /_\d\d\d\d\d\d\d\d$/.test(sensor.sensor_id))
+        // filter for just gas meters
+        data = data.filter(sensor => /.+_\d\d\d\d\d\d\d\d$/.test(sensor.sensor_id))
 
         let map = this.mainGoogleMap;
 
@@ -110,7 +110,7 @@ async function PlotSensorData() {
 
                         infowindow.open(map,marker);
 
-                        ZoomMapInOnBuildingId(building.bldg_id);
+                        // ZoomMapInOnBuildingId(building.bldg_id);
                     });
                 }
 
@@ -125,7 +125,7 @@ async function PlotSensorData() {
     }
     catch (err) {
         console.log(err)
-    }    
+    }
 }
 
 function ZoomMapInOnBuildingId(buildingId) {
@@ -136,7 +136,7 @@ function ZoomMapInOnBuildingId(buildingId) {
             // newMapPointObj = allMapPoints[i];
             buildingMapPoint = allMapPoints[i];
         }
-    }                    
+    }
 
     if (buildingMapPoint != null) {
         let map = this.mainGoogleMap;
