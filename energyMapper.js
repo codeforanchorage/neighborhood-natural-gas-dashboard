@@ -2,11 +2,12 @@ let mainGoogleMap;
 
 function myMap() {
 
-    let centerLatLong = new google.maps.LatLng(61.1181, -149.756667); // Defualt center hardcoded to Mitchell House
+    // let centerLatLong = new google.maps.LatLng(61.1181, -149.756667); // Defualt center hardcoded to Mitchell House
+    let centerLatLong = new google.maps.LatLng(61.166492, -149.872976)
 
     let mapProp= {
-        center:centerLatLong,    
-        zoom:12,
+        center:centerLatLong,
+        zoom:11,
     };
 
     let map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
@@ -45,6 +46,9 @@ async function PlotSensorData() {
     try {
         let data = await getAllSensors()
 
+        // filter just gas meters
+        // data = data.filter(sensor => /_\d\d\d\d\d\d\d\d$/.test(sensor.sensor_id))
+
         let map = this.mainGoogleMap;
 
         for (let dataCount = 0; dataCount < data.length; dataCount++) {
@@ -65,7 +69,7 @@ async function PlotSensorData() {
                     if (allMapPoints[i].buildingId == buildingId) {
                         newMapPointObj = allMapPoints[i];
                     }
-                }                    
+                }
 
                 if (newMapPointObj == null) {
                     let buildingPos = new google.maps.LatLng(building.latitude, building.longitude);
@@ -83,7 +87,7 @@ async function PlotSensorData() {
                         map:map
                     });
                     sensorRadiusCircle.setMap(map);
-                
+
                     let marker = new google.maps.Marker(
                         {
                             position: buildingPos
@@ -113,7 +117,7 @@ async function PlotSensorData() {
                 }
 
                 newMapPointObj.sensors.push(sensorData);
-                
+
             }
         }
     }
