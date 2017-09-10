@@ -6,6 +6,7 @@ font-family: 'Open Sans', sans-serif;
 font-weight: bold;
 font-size: 1.8rem;
 padding-bottom: -9%;
+max-width: 80%;
 
 }
 
@@ -39,20 +40,40 @@ font-weight: normal;
 
 }
 #div1{
-background-color: white;
+
 flex-grow: 1; 
 }
 
 
 #div2{
-background-color: white;
+
 flex-grow: 1; 
 }
 
 #div3{
-background-color: white;
+
 flex-grow: 1; 
 }
+
+#ban1{
+background-color: #ffffcc;
+opacity: .8;
+padding: 1px 1px 1px 1px;
+}
+
+#ban2{
+background-color: #7fcdbb;
+opacity: .8;
+padding: 1px 1px 1px 1px;
+
+}
+#ban3{
+background-color: #1d91c0;
+opacity: .8;
+padding: 1px 1px 1px 1px;
+}
+
+
 
 
 button, #gasInput, p {
